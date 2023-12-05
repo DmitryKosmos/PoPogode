@@ -1,7 +1,7 @@
 # подключаем библиотеку для работы с запросами
 import requests
 # указываем город
-city = 'Москва'
+city = input(str("Введите город: ", ))
 # формируем запрос
 url = 'https://api.openweathermap.org/data/2.5/weather?q='+city+'&units=metric&lang=ru&appid=3f472b11c2822d4d48af1c44a7ad2d5e'
 # отправляем запрос на сервер и сразу получаем результат
