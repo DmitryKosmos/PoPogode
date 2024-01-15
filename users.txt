@@ -1,0 +1,4 @@
+John	New York
+Anna	London
+Петя	Балашиха
+Дима	Истра
