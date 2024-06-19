@@ -1,30 +1,17 @@
 ## encoding: utf-8
 # подключаем библиотеку для работы с запросами
 import requests
-import user_add
 
-def get_last_user_city():
-    try:
-        with open('users.txt', 'r') as file:
-            lines = file.readlines()
-            if lines:
-                last_line = lines[-1].strip()
-                last_user_city = last_line.split(',')[1]
-                return last_user_city
-            else:
-                return 505
-    except FileNotFoundError:
-        print("Файл 'users.txt' не найден.")
-        return "Нет файла"
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-        return "Ошибка"
+
+
+
+
 
 # указываем город
 if __name__ == "__main__":
     city = 'Москва'
 else:
-    city = get_last_user_city()
+    city = "Саратов"
 
 # формируем запрос
 url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=metric&lang=ru&appid=3f472b11c2822d4d48af1c44a7ad2d5e'
