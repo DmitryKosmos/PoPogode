@@ -7,7 +7,9 @@ import random
 import messages
 
 
-def get_weather():
+def get_weather(url):
+    weather.weather_data(url)
+
     if weather.temperature_feels >= 20:
         print(random.choice(messages.hot))
         return random.choice(messages.hot)
@@ -26,12 +28,10 @@ def get_weather():
                 else:
                      print(random.choice(messages.dubak))
                      return random.choice(messages.dubak)
-def popodrobnee():
-
-    print('Сейчас в городе', weather.city, str(weather.temperature), '°C')
-    print('Ощущается как', str(weather.temperature_feels), '°C')
-    print("min", weather.temperature_min)
-    print("max", weather.temperature_max)
-    print(weather.sky)
-    
-    return 'Сейчас в городе', weather.city, str(weather.temperature), '°C','Ощущается как', str(weather.temperature_feels), '°C', "min", weather.temperature_min, "max", weather.temperature_max, weather.sky
+def popodrobnee(city):
+    result = [
+        'Сейчас в городе', city, str(weather.temperature), '°C',
+        'Ощущается как', str(weather.temperature_feels), '°C',
+        "min", str(weather.temperature_min), "max", str(weather.temperature_max), weather.sky
+    ]
+    return ' '.join(result)
