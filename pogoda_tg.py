@@ -1,11 +1,11 @@
 import os
 import telebot
 from telebot import types
-import weather
+## weather
 import pop
+import weather_func
 
-# Токен вашего бота
-API_TOKEN = 'ваш_токен_бота'
+
 
 # Создание экземпляра бота
 bot = telebot.TeleBot("6928765752:AAHY5e0iUdiEWRIMkZmskbiqMKb7_AYTrjg")
@@ -23,10 +23,11 @@ def get_user_city(user_id):
                     return user_info[1]
     return None
 
-# Функция для сохранения информации о пользователе
+
 def save_user_info(user_id, city):
     with open(users_file, 'a') as f:
         f.write(f'{user_id},{city}\n')
+
 
 # Обработчик команды /start
 @bot.message_handler(commands=['start'])
@@ -42,7 +43,6 @@ def start(message):
         show_main_menu(message)
 
 # Обработчик сохранения города
-city = "Негде"
 def save_city(message):
     user_id = message.chat.id
     city = message.text
@@ -58,6 +58,7 @@ def show_main_menu(message):
     markup.add(btn1, btn2)
     bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=markup)
 
+
 # Обработчик нажатия на кнопку "Узнать погоду"
 @bot.message_handler(func=lambda message: message.text == 'Узнать погоду')
 def get_weather(message):
@@ -65,12 +66,13 @@ def get_weather(message):
 
     user_city = get_user_city(user_id)
     if user_city is not None:
-        pop.get_weather()
-        proghoz = str(pop.get_weather())
-        podrobnee = str(pop.popodrobnee())
+        url = weather_func.get_url(user_city)
+        proghoz = str(pop.get_weather(url))
+        podrobnee = str(pop.popodrobnee(user_city))
         bot.send_message(user_id, proghoz + "\n" + podrobnee)
     else:
         bot.send_message(user_id, 'Пожалуйста, сначала установите ваш город.')
+
 
 # Обработчик нажатия на кнопку "Сменить город"
 @bot.message_handler(func=lambda message: message.text == 'Сменить город')
@@ -78,6 +80,12 @@ def change_city(message):
     user_id = message.chat.id
     msg = bot.reply_to(message, 'Введите новый город:')
     bot.register_next_step_handler(msg, save_city)
+
+
+@bot.message_handler(content_types=['text'])
+def get_text_messages(message):
+    if message.text == 'тест' or message.text == 'test':
+        bot.send_message(message.from_user.id, )
 
 # Запуск бота
 bot.polling()
