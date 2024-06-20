@@ -1,7 +1,7 @@
 ## encoding: utf-8
 # подключаем библиотеку для работы с запросами
 import requests
-
+import weather_func
 
 
 
@@ -9,12 +9,14 @@ import requests
 
 # указываем город
 if __name__ == "__main__":
-    city = 'Москва'
+    city = "Москва"
+    url = weather_func.get_weather(city)
 else:
-    city = "Саратов"
+    city = input(str("Введите город: "))
+    url = weather_func.get_weather(city)
 
 # формируем запрос
-url = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=metric&lang=ru&appid=3f472b11c2822d4d48af1c44a7ad2d5e'
+
 # отправляем запрос на сервер и сразу получаем результат
 weather_data = requests.get(url).json()
 # получаем данные о температуре и о том, как она ощущается
