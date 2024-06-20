@@ -10,28 +10,39 @@ import weather_func
 # указываем город
 if __name__ == "__main__":
     city = "Москва"
-    url = weather_func.get_weather(city)
-else:
-    city = input(str("Введите город: "))
-    url = weather_func.get_weather(city)
+    url = weather_func.get_url(city)
+
+
 
 # формируем запрос
-
+wd = temperature = temperature_min = temperature_max = temperature_sr = temperature_feels = sky = 0
 # отправляем запрос на сервер и сразу получаем результат
-weather_data = requests.get(url).json()
+def weather_data(url):
+    global wd
+    wd = requests.get(url).json()
+    global temperature
+    temperature = round(wd['main']['temp'])
+    global temperature_min
+    temperature_min = round(wd['main']['temp_min'])
+    global temperature_max
+    temperature_max = round(wd['main']['temp_max'])
+    global temperature_sr
+    temperature_sr = round((temperature_min + temperature_max) / 2)
+    global temperature_feels
+    temperature_feels = round(wd['main']['feels_like'])
+    global sky
+    sky = wd['weather'][0]['description']
+    return wd, temperature, temperature_min, temperature_max, temperature_sr, temperature_feels, sky
+
 # получаем данные о температуре и о том, как она ощущается
-temperature = round(weather_data['main']['temp'])
-temperature_min = round(weather_data['main']['temp_min'])
-temperature_max = round(weather_data['main']['temp_max'])
-temperature_sr = round((temperature_min + temperature_max) / 2)
-temperature_feels = round(weather_data['main']['feels_like'])
-sky = weather_data['weather'][0]['description']
+
 
 if __name__ == "__main__":
+    weather_data(url)
     print('Сейчас в городе', city, str(temperature), '°C')
     print('Ощущается как', str(temperature_feels), '°C')
     print("min", temperature_min)
     print("max", temperature_max)
     print("sred", temperature_sr)
     print(sky)
-    print(weather_data)  ##на всякий случай
+    print(wd)  ##на всякий случай
