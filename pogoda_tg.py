@@ -84,8 +84,11 @@ def change_city(message):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    if message.text == 'тест' or message.text == 'test':
-        bot.send_message(message.from_user.id, )
+    if message.text == 'тест' or message.text == 'test' or message.text == "Где я?"\
+            or message.text == "где я?":
+        user_id = message.chat.id
+        user_city = get_user_city(user_id)
+        bot.send_message(user_id, user_city)
 
 # Запуск бота
 bot.polling()
