@@ -25,8 +25,47 @@ def get_user_city(user_id):
 
 
 def save_user_info(user_id, city):
-    with open(users_file, 'a') as f:
-        f.write(f'{user_id},{city}\n')
+    # Проверяем, есть ли запись для этого пользователя
+    user_data = read_user_data()
+    updated_user_data = []
+    found_user = False
+
+    for line in user_data:
+        parts = line.split(',')
+        if len(parts) == 2:
+            line_user_id, line_city = parts
+            if line_user_id == str(user_id):
+                found_user = True
+                # Обновляем существующую запись
+                updated_user_data.append(f'{user_id},{city}')
+            else:
+                updated_user_data.append(line)
+
+    # Если пользователь не найден, добавляем новую запись
+    if not found_user:
+        updated_user_data.append(f'{user_id},{city}')
+
+    # Сохраняем обновленные данные в файл
+    with open(users_file, 'w') as f:
+        for line in updated_user_data:
+            f.write(f'{line}\n')
+
+
+
+def read_user_data():
+    user_data = []
+    try:
+        with open(users_file, 'r') as f:
+            for line in f:
+                parts = line.strip().split(',')
+                if len(parts) == 2:
+                    user_id, city = parts
+                    user_data.append(f'{user_id},{city}')
+                else:
+                    print(f'Некорректная строка в файле: {line.strip()}')
+    except FileNotFoundError:
+        pass
+    return user_data
 
 
 # Обработчик команды /start
