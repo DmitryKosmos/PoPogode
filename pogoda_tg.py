@@ -4,7 +4,7 @@ from telebot import types
 ## weather
 import pop
 import weather_func
-
+import re
 
 
 # Создание экземпляра бота
@@ -23,8 +23,20 @@ def get_user_city(user_id):
                     return user_info[1]
     return None
 
-
+correct_cities = weather_func.correct_cities
 def save_user_info(user_id, city):
+    # Проверяем, что город введен на русском языке
+    if not re.match(r'^[а-яА-ЯёЁ\s]+$', city):
+        print("Город должен быть введен на русском языке.")
+        return
+
+    # Проверяем, что город написан правильно
+    city_lower = city.lower()
+    if city_lower not in correct_cities:
+        print(f"Город '{city}' не найден или введен неправильно.")
+        return
+    corrected_city = correct_cities[city_lower]
+
     # Проверяем, есть ли запись для этого пользователя
     user_data = read_user_data()
     updated_user_data = []
@@ -37,13 +49,13 @@ def save_user_info(user_id, city):
             if line_user_id == str(user_id):
                 found_user = True
                 # Обновляем существующую запись
-                updated_user_data.append(f'{user_id},{city}')
+                updated_user_data.append(f'{user_id},{corrected_city}')
             else:
                 updated_user_data.append(line)
 
     # Если пользователь не найден, добавляем новую запись
     if not found_user:
-        updated_user_data.append(f'{user_id},{city}')
+        updated_user_data.append(f'{user_id},{corrected_city}')
 
     # Сохраняем обновленные данные в файл
     with open(users_file, 'w') as f:
@@ -85,6 +97,16 @@ def start(message):
 def save_city(message):
     user_id = message.chat.id
     city = message.text
+    if not re.match(r'^[а-яА-ЯёЁ\s]+$', city):
+        bot.send_message(user_id, "Город должен быть введен на русском языке.")
+        return
+
+    # Проверяем, что город написан правильно
+    city_lower = city.lower()
+    if city_lower not in correct_cities:
+        bot.send_message(user_id, f"Город '{city}' не найден или введен неправильно.")
+        return
+    corrected_city = correct_cities[city_lower]
     save_user_info(user_id, city)
     bot.send_message(user_id, f'Город сохранен: {city}')
     show_main_menu(message)
