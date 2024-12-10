@@ -8,7 +8,7 @@ import re
 
 
 # Создание экземпляра бота
-bot = telebot.TeleBot("6928765752:AAHY5e0iUdiEWRIMkZmskbiqMKb7_AYTrjg")
+bot = telebot.TeleBot("YOR_TOKEN")
 
 # Путь к файлу users.txt
 users_file = 'users.txt'
